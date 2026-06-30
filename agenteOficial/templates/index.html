@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agente de Análisis — Data Warehouse Retail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__brand">
+    <span class="topbar__mark">DWR</span>
+    <span class="topbar__title">Agente de Análisis — Data Warehouse Retail</span>
+  </div>
+  <div class="topbar__mode">
+    MODO: <strong id="dbMode">{{ db_mode|upper }}</strong>
+  </div>
+</header>
+
+<main class="layout">
+
+  <section class="panel panel--query">
+    <label class="field-label" for="pregunta">Pregunta en lenguaje natural</label>
+    <form id="form-consulta" class="query-form">
+      <input
+        id="pregunta"
+        name="pregunta"
+        type="text"
+        autocomplete="off"
+        placeholder="Ej. ¿Cuáles fueron los cinco productos más vendidos?"
+      >
+      <button type="submit" id="btnEnviar">Ejecutar</button>
+    </form>
+    <p class="hint">El agente decide el motor (Hive / Spark) y el tipo de gráfico según la consulta.</p>
+  </section>
+
+  <section id="estado" class="panel panel--estado is-hidden">
+    <div class="estado__spinner"></div>
+    <span>Generando SQL y ejecutando consulta…</span>
+  </section>
+
+  <section id="resultado" class="resultado is-hidden">
+
+    <section class="panel panel--ticket">
+      <div class="ticket__row ticket__row--top">
+        <div class="ticket__motor">
+          <span class="field-label">Motor seleccionado</span>
+          <span id="motorBadge" class="badge">—</span>
+        </div>
+        <div class="ticket__sql">
+          <span class="field-label">SQL generado</span>
+          <code id="sqlGenerado">—</code>
+        </div>
+      </div>
+
+      <div class="ticket__metrics">
+        <div class="metric">
+          <span class="metric__label">Tiempo de ejecución</span>
+          <span class="metric__value" id="metricTiempo">—</span>
+        </div>
+        <div class="metric">
+          <span class="metric__label">Uso de CPU</span>
+          <span class="metric__value" id="metricCpu">—</span>
+        </div>
+        <div class="metric">
+          <span class="metric__label">Uso de memoria</span>
+          <span class="metric__value" id="metricMem">—</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel--respuesta">
+      <span class="field-label">Respuesta</span>
+      <p id="respuestaNl">—</p>
+    </section>
+
+    <section class="panel panel--grafico">
+      <div class="panel__header">
+        <span class="field-label" id="graficoTitulo">Visualización</span>
+      </div>
+      <div class="grafico__wrap">
+        <canvas id="grafico"></canvas>
+        <div id="kpiGrande" class="kpi-grande is-hidden"></div>
+      </div>
+    </section>
+
+    <section class="panel panel--tabla">
+      <div class="panel__header">
+        <span class="field-label">Resultado completo</span>
+      </div>
+      <div class="tabla__wrap">
+        <table id="tablaResultado">
+          <thead><tr id="tablaHead"></tr></thead>
+          <tbody id="tablaBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </section>
+
+  <section id="errorBox" class="panel panel--error is-hidden">
+    <span class="field-label">Error</span>
+    <p id="errorMsg">—</p>
+  </section>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
